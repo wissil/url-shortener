@@ -15,7 +15,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan({"hr.infobip.urlservice"})
 @EntityScan("hr.infobip.urlservice")
-public class UrlShortener {
+public class AppStarter {
 
 	/**
 	 * Program entry-point.<br>
@@ -26,7 +26,7 @@ public class UrlShortener {
 	public static void main(String[] args) {
 		// creates servlet container
 		// hosts the app in the servlet container
-		SpringApplication.run(UrlShortener.class, args);
+		SpringApplication.run(AppStarter.class, args);
 	}
 
 }

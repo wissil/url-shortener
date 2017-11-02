@@ -56,7 +56,7 @@ public class AccountRepository {
 	 * @return <code>true</code> if the account with a given <code>accountId</code> is in this repository,
 	 * and <code>false</code> otherwise.
 	 */
-	public boolean exists(String accountId) {
+	public boolean contains(String accountId) {
 		return accounts.containsKey(accountId);
 	}
 
@@ -70,4 +70,5 @@ public class AccountRepository {
 	public void save(Account account) {		
 		accounts.put(account.getAccountId(), account);
 	}
+		
 }

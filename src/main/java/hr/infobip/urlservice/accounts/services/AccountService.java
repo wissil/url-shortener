@@ -3,7 +3,6 @@ package hr.infobip.urlservice.accounts.services;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import hr.infobip.urlservice.accounts.model.Account;
@@ -29,11 +28,6 @@ public class AccountService {
 	 * Generates random password for the account.
 	 */
 	private final PasswordGenerator passwordGenerator;
-	
-	/**
-	 * Encodes the password with <i>BCrypt</i> hashing function.
-	 */
-	private final PasswordEncoder passwordEncoder;
 
 	/**
 	 * Creates a new instance of {@link AccountService}.
@@ -41,11 +35,9 @@ public class AccountService {
 	 * @param repository Repository of the registered accounts.
 	 */
 	@Autowired
-	public AccountService(AccountRepository repository, PasswordGenerator passwordGenerator,
-			PasswordEncoder passwordEncoder) {
+	public AccountService(AccountRepository repository, PasswordGenerator passwordGenerator) {
 		this.repository = Objects.requireNonNull(repository);
 		this.passwordGenerator = Objects.requireNonNull(passwordGenerator);
-		this.passwordEncoder = Objects.requireNonNull(passwordEncoder);
 	}
 	
 	/**
@@ -58,7 +50,7 @@ public class AccountService {
 	 */
 	public void save(String accountId, String password) {
 		// only store password hashes to the memory
-		repository.save(new Account(accountId, passwordEncoder.encode(password)));
+		repository.save(new Account(accountId, password));
 	}
 	
 	/**
@@ -69,7 +61,7 @@ public class AccountService {
 	 * and <code>false</code> otherwise.
 	 */
 	public boolean exists(String accountId) {
-		return repository.exists(accountId);
+		return repository.contains(accountId);
 	}
 	
 	/**
@@ -78,6 +70,7 @@ public class AccountService {
 	 * @return Generated random password.
 	 */
 	public String generatePassword() {
+		// random password is returned
 		return passwordGenerator.generate();
 	}
 }

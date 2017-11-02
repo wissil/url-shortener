@@ -74,4 +74,9 @@ public class Account {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Account [accountId=" + accountId + ", passwordHash=" + passwordHash + "]";
+	}
 }
