@@ -33,7 +33,7 @@ public class AccountService {
 	/**
 	 * Encodes the password with <i>BCrypt</i> hashing function.
 	 */
-	private final PasswordEncoder passwordEncoder;
+	//private final PasswordEncoder passwordEncoder;
 
 	/**
 	 * Creates a new instance of {@link AccountService}.
@@ -41,11 +41,9 @@ public class AccountService {
 	 * @param repository Repository of the registered accounts.
 	 */
 	@Autowired
-	public AccountService(AccountRepository repository, PasswordGenerator passwordGenerator,
-			PasswordEncoder passwordEncoder) {
+	public AccountService(AccountRepository repository, PasswordGenerator passwordGenerator) {
 		this.repository = Objects.requireNonNull(repository);
 		this.passwordGenerator = Objects.requireNonNull(passwordGenerator);
-		this.passwordEncoder = Objects.requireNonNull(passwordEncoder);
 	}
 	
 	/**
@@ -58,7 +56,9 @@ public class AccountService {
 	 */
 	public void save(String accountId, String password) {
 		// only store password hashes to the memory
-		repository.save(new Account(accountId, passwordEncoder.encode(password)));
+		repository.save(new Account(accountId, password));
+		System.err.println("Repo: " + repository);
+		System.err.println("Slavko exists: " + repository.exists("Slavko"));
 	}
 	
 	/**

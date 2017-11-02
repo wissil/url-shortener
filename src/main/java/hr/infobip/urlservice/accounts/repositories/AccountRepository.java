@@ -70,4 +70,11 @@ public class AccountRepository {
 	public void save(Account account) {		
 		accounts.put(account.getAccountId(), account);
 	}
+
+	@Override
+	public String toString() {
+		return "AccountRepository [accounts=" + accounts + "]";
+	}
+	
+	
 }

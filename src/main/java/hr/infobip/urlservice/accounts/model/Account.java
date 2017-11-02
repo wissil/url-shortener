@@ -19,17 +19,17 @@ public class Account {
 	/**
 	 * The password hash of this account.
 	 */
-	private final String passwordHash;
+	private final String password;
 	
 	/**
 	 * Creates a new instance of {@link Account}.
 	 * 
 	 * @param accountId The Id of the account being created.
-	 * @param passwordHash The password hash of the account being created.
+	 * @param password The password hash of the account being created.
 	 */
-	public Account(String accountId, String passwordHash) {
+	public Account(String accountId, String password) {
 		this.accountId = Objects.requireNonNull(accountId);
-		this.passwordHash = Objects.requireNonNull(passwordHash);
+		this.password = Objects.requireNonNull(password);
 	}
 	
 	/**
@@ -46,8 +46,8 @@ public class Account {
 	 * 
 	 * @return Password hash.
 	 */
-	public String getPasswordHash() {
-		return passwordHash;
+	public String getPassword() {
+		return password;
 	}
 
 	@Override
@@ -74,4 +74,11 @@ public class Account {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Account [accountId=" + accountId + ", password=" + password + "]";
+	}
+	
+	
 }

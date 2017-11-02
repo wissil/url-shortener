@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import hr.infobip.urlservice.accounts.controllers.responses.AccountCreatedResponse;
+import hr.infobip.urlservice.accounts.requests.AccountCreateRequest;
+import hr.infobip.urlservice.accounts.responses.AccountCreateResponse;
 import hr.infobip.urlservice.accounts.services.AccountService;
 
 /**
@@ -38,24 +39,40 @@ public class AccountController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/account", produces = "application/json")
-	public ResponseEntity<AccountCreatedResponse> create(@RequestBody String accountId) {
+	public ResponseEntity<AccountCreateResponse> create(@RequestBody AccountCreateRequest request) {
+		String accountId = request.getAccountId();
+		
+		
+		if (!isLegalAccountId(accountId)) {
+			// bad request: accountId not provided
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		System.err.println(accountId);
+		
+		// accountId provided
 		if (service.exists(accountId)) {
 			// account already exists
 			final boolean fail = false;
 			
-			return new ResponseEntity<AccountCreatedResponse>(
-					new AccountCreatedResponse(fail, null),
+			return new ResponseEntity<AccountCreateResponse>(
+					new AccountCreateResponse(fail, null),
 					HttpStatus.BAD_REQUEST);
 		} else {
 			// account doesn't already exist --> save it!
 			String password = service.generatePassword();
+			System.err.println(password);
 			service.save(accountId, password);
 			
 			final boolean success = true;
 			
-			return new ResponseEntity<AccountCreatedResponse>(
-					new AccountCreatedResponse(success, password),
+			return new ResponseEntity<AccountCreateResponse>(
+					new AccountCreateResponse(success, password),
 					HttpStatus.CREATED);
 		}
+	}
+
+	private static boolean isLegalAccountId(String accountId) {
+		return accountId != null && !accountId.isEmpty();
 	}
 }

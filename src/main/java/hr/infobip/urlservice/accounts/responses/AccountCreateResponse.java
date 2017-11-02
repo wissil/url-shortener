@@ -1,4 +1,4 @@
-package hr.infobip.urlservice.accounts.controllers.responses;
+package hr.infobip.urlservice.accounts.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  *
  */
 @JsonInclude(Include.NON_NULL)
-public class AccountCreatedResponse {
+public class AccountCreateResponse {
 	
 	/**
 	 * Successful account creation message.
@@ -20,7 +20,7 @@ public class AccountCreatedResponse {
 	/**
 	 * Failed account creation message.
 	 */
-	private static final String ACC_NOT_CREATED = "Account with the requested Id already exists.";
+	private static final String ACC_EXISTS = "Account with the requested Id already exists.";
 
 	/**
 	 * Whether the requested account is created or not.
@@ -38,16 +38,16 @@ public class AccountCreatedResponse {
 	private final String password;
 
 	/**
-	 * Creates a new instance of {@link AccountCreatedResponse}.
+	 * Creates a new instance of {@link AccountCreateResponse}.
 	 * 
 	 * @param success Whether or not the requested account was successfully created.
 	 * @param password Generated password for the requested account.<br>
 	 * <code>null</code> if no password was generated.
 	 */
-	public AccountCreatedResponse(boolean success, String password) {
+	public AccountCreateResponse(boolean success, String password) {
 		this.success = success;
 		this.password = password;
-		this.description = success ? ACC_CREATED : ACC_NOT_CREATED;
+		this.description = success ? ACC_CREATED : ACC_EXISTS;
 	}
 
 	/**

@@ -1,9 +1,13 @@
 package hr.infobip.urlservice.accounts.services;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,8 +44,15 @@ public class AccountDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String accountId) throws UsernameNotFoundException {
-		Account account = repository.findById(accountId);
-		return new User(account.getAccountId(), account.getPasswordHash(), Collections.emptySet());
+		System.err.println("***************************");
+	    Account account = repository.findById(accountId);
+	    
+	    System.err.println("User: " + account.getAccountId());
+	    System.err.println("Password: " + account.getPassword());
+	    
+	    Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+	    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+	    return new User(account.getAccountId(), account.getPassword(), authorities);
 	}
 
 }
