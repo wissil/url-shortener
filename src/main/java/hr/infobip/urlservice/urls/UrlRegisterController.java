@@ -1,11 +1,15 @@
 package hr.infobip.urlservice.urls;
 
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,22 +18,28 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import hr.infobip.urlservice.accounts.model.Account;
+import hr.infobip.urlservice.accounts.services.AccountSecurityService;
 import hr.infobip.urlservice.urls.responses.UrlRegisterFailResponse;
 import hr.infobip.urlservice.urls.responses.UrlRegisterResponse;
 import hr.infobip.urlservice.urls.responses.UrlRegisterSuccessResponse;
+import hr.infobip.urlservice.urls.services.UrlRegisterService;
 
 @RestController
 public class UrlRegisterController {
 	
-	private final UrlRegisterService registerService;
+	private final UrlRegisterService urlService;
+	
+	private final AccountSecurityService securityService;
 	
 	private final UrlValidator urlValidator;
 	
 	@Autowired
-	public UrlRegisterController(UrlRegisterService registerService, 
-			UrlValidator urlValidator) {
-		this.registerService = registerService;
-		this.urlValidator = urlValidator;
+	public UrlRegisterController(UrlRegisterService registerService, UrlValidator urlValidator,
+			AccountSecurityService securityService) {
+		this.urlService = Objects.requireNonNull(registerService);
+		this.urlValidator = Objects.requireNonNull(urlValidator);
+		this.securityService = Objects.requireNonNull(securityService);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/register", produces = "application/json")
@@ -39,8 +49,8 @@ public class UrlRegisterController {
 			return new ResponseEntity<>(
 					new UrlRegisterFailResponse("Illegal request body."),
 					HttpStatus.BAD_REQUEST);
-		}
-		
+		}		
+				
 		// legal request body
 		String longUrl = url.getUrl();
 		if (!isLegalUrl(longUrl)) {
@@ -50,11 +60,13 @@ public class UrlRegisterController {
 		}
 		
 		// legal url
-		String urlId = registerService.registerUrl(url);
+		// TODO: same long URL --> same Url Id
+		String accountId = securityService.getUsernameFromContext();
+		String urlId = urlService.registerUrl(accountId, url);
 		
 		return new ResponseEntity<>(
 				new UrlRegisterSuccessResponse(buildUrl(urlId)),
-				url.getHttpStatus());
+				HttpStatus.CREATED);
 	}
 
 	private boolean isLegalUrl(String longUrl) {

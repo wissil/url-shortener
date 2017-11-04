@@ -1,19 +1,12 @@
 package hr.infobip.urlservice.accounts.services;
 
-import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import hr.infobip.urlservice.accounts.model.Account;
-
 /**
- * A class that represents the security aspect of this application.<br>
- * In terms, it provides the authentication and authorization data of the logged in account.
+ * A service class that represents the security context of the application.<br>
  * 
  * @author fiilip
  *
@@ -22,62 +15,21 @@ import hr.infobip.urlservice.accounts.model.Account;
 public class AccountSecurityService {
 	
 	/**
-	 * Authentication manager of this service.
-	 */
-	private final AuthenticationManager authManager;
-	
-	/**
-	 * Service that provides the account details.
-	 */
-	private final AccountDetailsService accDetailsService;
-	
-	/**
-	 * Creates new instance of {@link AccountSecurityService}.
+	 * Gets the <b>username</b> from the current security context.<br>
+	 * Ie. the username being set in the <i>Authorization</i> header of the request.
 	 * 
-	 * @param authManager Authentication manager.
-	 * @param accDetailsService Provides details of the accounts.
+	 * @return If the username is specified in the current security context, it's being returned, 
+	 * otherwise <code>null</code> is returned.
 	 */
-	@Autowired
-	public AccountSecurityService(AuthenticationManager authManager, AccountDetailsService accDetailsService) {
-		this.authManager = Objects.requireNonNull(authManager);
-		this.accDetailsService = Objects.requireNonNull(accDetailsService);
-	}
-	
-	/**
-	 * Gets the {@link Account} currently logged-in.
-	 * 
-	 * @return If there is currently logged-in account, it's being returned, otherwise 
-	 * <code>null</code> is returned.
-	 */
-	public Account getLoggedInAccount() {
-		Object loggedIn = SecurityContextHolder.getContext().getAuthentication().getDetails();
+	public String getUsernameFromContext() {
+		Object loggedIn = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		if (!(loggedIn instanceof Account)) {
+		if (!(loggedIn instanceof User)) {
 			return null;
 		}
 		
-		return (Account) loggedIn;
-	}
-
-	/**
-	 * Performs the log-in of the account with <code>accountId</code> and
-	 * <code>password</code>.
-	 * 
-	 * @param accountId Id of the account being logged-in.
-	 * @param password Password of the account being logged-in.
-	 */
-	public void login(String accountId, String password) {
-		UserDetails accDetails = accDetailsService.loadUserByUsername(accountId);
+		User loggedInUser = (User) loggedIn;
 		
-		UsernamePasswordAuthenticationToken token = 
-				new UsernamePasswordAuthenticationToken(accDetails, password, accDetails.getAuthorities());
-		
-		// authenticate token with the given account details
-		authManager.authenticate(token);
-		
-		if (token.isAuthenticated()) {
-			// provide authentication info to the context
-			SecurityContextHolder.getContext().setAuthentication(token);
-		}
+		return loggedInUser.getUsername();
 	}
 }

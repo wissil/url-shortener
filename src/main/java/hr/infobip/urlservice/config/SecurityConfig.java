@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -51,25 +52,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
     		System.err.println("???????");
-        auth.userDetailsService(accountDetailsService)/*.passwordEncoder(new BCryptPasswordEncoder())*/;
+        auth.userDetailsService(accountDetailsService).passwordEncoder(passwordEncoder());
     }
 
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		System.err.println("!!!!!!");
-		
-//		// permit public POST to '/account' endpoint
-//		http.authorizeRequests()
-//							.antMatchers(HttpMethod.POST, "/account") 
-//							.permitAll().anyRequest().authenticated();
-//		
-////		// disable csrf for security
-//		http.csrf().disable();
-		
-		http.csrf().disable()
+	protected void configure(HttpSecurity http) throws Exception {		
+		http
+			.csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
 			.authorizeRequests()
-			.antMatchers(HttpMethod.POST, "/account").permitAll()
-			.anyRequest().authenticated()
+			.antMatchers(HttpMethod.POST, "/account").permitAll() // public endpoint
+			.antMatchers(HttpMethod.GET, "/u/**").permitAll() // public endpoint
+			.anyRequest().authenticated() // any other endpoint authenticated
 			.and()
 			.httpBasic();
 	}
