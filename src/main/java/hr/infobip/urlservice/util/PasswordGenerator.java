@@ -1,7 +1,7 @@
 package hr.infobip.urlservice.util;
 
 import java.security.SecureRandom;
-import java.util.Random;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Component;
 
@@ -14,24 +14,34 @@ public class PasswordGenerator {
 	private static final int PASS_LENGTH = 8;
 	
 	/**
-	 * Symbols available for password generation.
-	 */
-	private static final String SYMBOLS =
-			"ABCDEFGHIJKLMNOPQRSTUVWXYZ" + // upper-case letters
-			"abcdefghijklmnopqrstuvxyz" +  // lower-case letters
-			"0123456789";				  // digits
-	
-	/**
-	 * Number of symbols to choose from whenever generating a password.
-	 */
-	private static final int SYM_LEN = SYMBOLS.length(); // cached for performance improvement
-	
-	/**
 	 * Random number generator.<br>
 	 * {@link SecureRandom} is used because of better variation of generated symbols.
 	 */
-	private static Random random = new SecureRandom();
+	private final SecureRandom random;
+	
+	/**
+	 * Symbols available for password generation.
+	 */
+	// currently there are 62 symbols in use
+	private static final char[] symbols = {
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+			
+			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+			'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+			'u', 'v', 'w', 'x', 'y', 'z', 
+			
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
+			'U', 'V', 'W', 'X', 'Y', 'Z'
+	};
 
+	/**
+	 * Creates a new instance of {@link PasswordGenerator}.
+	 */
+	public PasswordGenerator() {
+		this.random = new SecureRandom();
+	}
+	
 	/**
 	 * Generates a random alpha-numeric password.
 	 * 
@@ -39,12 +49,11 @@ public class PasswordGenerator {
 	 */
 	public String generate() {
 		StringBuilder sb = new StringBuilder(PASS_LENGTH);
-		
-		for (int i=0; i<PASS_LENGTH; i++) {
-			int index = random.nextInt(SYM_LEN);
-			sb.append(SYMBOLS.charAt(index));
-		}
-		
+
+		IntStream
+		.range(0, PASS_LENGTH)
+		.forEach(i -> sb.append(symbols[random.nextInt(symbols.length)]));
+
 		return sb.toString();
 	}
 }
