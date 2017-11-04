@@ -8,8 +8,6 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +16,6 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import hr.infobip.urlservice.accounts.model.Account;
 import hr.infobip.urlservice.accounts.services.AccountSecurityService;
 import hr.infobip.urlservice.urls.responses.UrlRegisterFailResponse;
 import hr.infobip.urlservice.urls.responses.UrlRegisterResponse;
@@ -60,7 +57,6 @@ public class UrlRegisterController {
 		}
 		
 		// legal url
-		// TODO: same long URL --> same Url Id
 		String accountId = securityService.getUsernameFromContext();
 		String urlId = urlService.registerUrl(accountId, url);
 		

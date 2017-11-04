@@ -29,16 +29,12 @@ public class UrlRepository {
 		}
 		
 		if (accountStats.get(accountId) == null) {
-			Set<Url> stats = new HashSet<>();
-			
-			// refactor to hold reference to the URL, and then format the output JSON in controller
+			Set<Url> stats = new HashSet<>();		
 			stats.add(url);
-			//stats.put(url.getUrl(), url.getNumberOfHits());
 			accountStats.put(accountId, stats);
 		} else {
 			Set<Url> stats = accountStats.get(accountId);
 			stats.add(url);
-			//Map<String, Integer> stats = accountStats.get(accountId);
 			accountStats.put(accountId, stats);
 		}
 		
