@@ -1,4 +1,4 @@
-package hr.infobip.urlservice.accounts.model;
+package hr.infobip.urlservice.accounts.models;
 
 import java.util.Objects;
 

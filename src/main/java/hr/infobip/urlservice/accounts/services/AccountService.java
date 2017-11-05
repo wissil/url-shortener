@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import hr.infobip.urlservice.accounts.model.Account;
+import hr.infobip.urlservice.accounts.models.Account;
 import hr.infobip.urlservice.accounts.repositories.AccountRepository;
 
 /**
@@ -42,7 +42,6 @@ public class AccountService {
 	 * @param encoded Encoded password of the account to be saved.
 	 */
 	public void save(String accountId, String encoded) {
-		// only store password hashes to the memory
 		repository.save(new Account(accountId, encoded));
 	}
 	
@@ -53,7 +52,7 @@ public class AccountService {
 	 * @return <code>true</code> if the account with a given <code>accountId</code> already exists,
 	 * and <code>false</code> otherwise.
 	 */
-	public boolean exists(String accountId) {
-		return repository.exists(accountId);
+	public boolean containsAccount(String accountId) {
+		return repository.contains(accountId);
 	}
 }

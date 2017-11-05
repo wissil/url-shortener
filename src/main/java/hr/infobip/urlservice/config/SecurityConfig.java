@@ -2,9 +2,7 @@ package hr.infobip.urlservice.config;
 
 import java.util.Objects;
 
-import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import hr.infobip.urlservice.accounts.services.AccountDetailsService;
@@ -28,31 +25,31 @@ import hr.infobip.urlservice.accounts.services.AccountDetailsService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	/**
-	 * Generates a password encoder bean.
-	 * 
-	 * @return Password encoder instance.
+	 * Provides details for the accounts stored in this service.
 	 */
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	
-	@Bean
-	public UrlValidator urlValidator() {
-		return new UrlValidator(new String[]{"http", "https"});
-	}
-	
     private final AccountDetailsService accountDetailsService;
+    
+    /**
+     * Encodes passwords to hashes.
+     */
+    private final PasswordEncoder passwordEncoder;
 	
+    /**
+     * Creates a new instance of {@link SecurityConfig}.
+     * 
+     * @param accountDetailsService Service whose role is to provide detilas for the accounts
+     * stored in this service.
+     * @param passwordEncoder Encodes passwords to only store hashes in memory.
+     */
     @Autowired
-	public SecurityConfig(AccountDetailsService accountDetailsService) {
+	public SecurityConfig(AccountDetailsService accountDetailsService, PasswordEncoder passwordEncoder) {
 		this.accountDetailsService = Objects.requireNonNull(accountDetailsService);
+		this.passwordEncoder = Objects.requireNonNull(passwordEncoder);
 	}
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    		System.err.println("???????");
-        auth.userDetailsService(accountDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(accountDetailsService).passwordEncoder(passwordEncoder);
     }
 
 	@Override

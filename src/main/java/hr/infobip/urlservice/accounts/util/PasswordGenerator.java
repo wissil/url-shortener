@@ -1,4 +1,4 @@
-package hr.infobip.urlservice.util;
+package hr.infobip.urlservice.accounts.util;
 
 import java.security.SecureRandom;
 import java.util.stream.IntStream;
@@ -51,8 +51,8 @@ public class PasswordGenerator {
 		StringBuilder sb = new StringBuilder(PASS_LENGTH);
 
 		IntStream
-		.range(0, PASS_LENGTH)
-		.forEach(i -> sb.append(symbols[random.nextInt(symbols.length)]));
+			.range(0, PASS_LENGTH)
+			.forEach(i -> sb.append(symbols[random.nextInt(symbols.length)]));
 
 		return sb.toString();
 	}

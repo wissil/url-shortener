@@ -16,7 +16,7 @@ import hr.infobip.urlservice.accounts.responses.AccountCreateInvalidRequestRespo
 import hr.infobip.urlservice.accounts.responses.AccountCreateResponse;
 import hr.infobip.urlservice.accounts.responses.AccountCreateValidRequestResponse;
 import hr.infobip.urlservice.accounts.services.AccountService;
-import hr.infobip.urlservice.util.PasswordGenerator;
+import hr.infobip.urlservice.accounts.util.PasswordGenerator;
 
 /**
  * A controller that is responsible for user accounts management.
@@ -67,26 +67,25 @@ public class AccountController {
 		}
 				
 		// accountId provided
-		if (service.exists(accountId)) {
+		if (service.containsAccount(accountId)) {
 			// account already exists
 			final boolean fail = false;
 			
 			return new ResponseEntity<>(
 					new AccountCreateValidRequestResponse(fail, null, "Account with the requested Id already exists."),
 					HttpStatus.BAD_REQUEST);
-			
-		} else {
-			// account doesn't already exist --> save it!
-			String password = passwordGenerator.generate();
-			String encoded = passwordEncoder.encode(password);
-			service.save(accountId, encoded);
-			
-			final boolean success = true;
-			
-			return new ResponseEntity<>(
-					new AccountCreateValidRequestResponse(success, password, "Your account is created."),
-					HttpStatus.CREATED);
 		}
+			
+		// account doesn't already exist --> save it!
+		String password = passwordGenerator.generate();
+		String encoded = passwordEncoder.encode(password);
+		service.save(accountId, encoded);
+
+		final boolean success = true;
+
+		return new ResponseEntity<>(
+				new AccountCreateValidRequestResponse(success, password, "Your account is created."),
+				HttpStatus.CREATED);
 	}
 
 	/**

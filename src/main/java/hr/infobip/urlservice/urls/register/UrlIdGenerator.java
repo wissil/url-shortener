@@ -1,6 +1,6 @@
-package hr.infobip.urlservice.urls;
+package hr.infobip.urlservice.urls.register;
 
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Component;
@@ -24,11 +24,6 @@ public class UrlIdGenerator {
 	private static final int URL_ID_LENGTH = 6;
 	
 	/**
-	 * Regular expression describing the <i>Url Id</i>.
-	 */
-	//private static final String regex = String.format("([a-zA-Z0-9]{%d})", URL_ID_LENGTH);
-	
-	/**
 	 * Symbols used for the URL generation.<br>
 	 */
 	// currently there are 62 symbols in use
@@ -45,15 +40,16 @@ public class UrlIdGenerator {
 	};
 	
 	/**
-	 * Random value generator.
+	 * Random value generator.<br>
+	 * {@link SecureRandom} is used to provide better variance in the generated <b>URL</b>s.
 	 */
-	private final Random random;
+	private final SecureRandom random;
 	
 	/**
 	 * Creates a new instance of {@link UrlIdGenerator}.
 	 */
 	public UrlIdGenerator() {
-		this.random = new Random();
+		this.random = new SecureRandom();
 	}
 	
 	/**

@@ -2,6 +2,8 @@ package hr.infobip.urlservice.accounts.responses;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * A class representing a service response to the invalid request of creating a new user account.
  * 
@@ -29,6 +31,7 @@ public class AccountCreateInvalidRequestResponse implements AccountCreateRespons
 	 * 
 	 * @return Message of this reponse.
 	 */
+	@JsonProperty("message")
 	public String getMessage() {
 		return message;
 	}

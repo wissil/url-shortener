@@ -1,4 +1,4 @@
-package hr.infobip.urlservice.urls.responses;
+package hr.infobip.urlservice.urls.register.responses;
 
 import java.util.Objects;
 

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import hr.infobip.urlservice.accounts.model.Account;
+import hr.infobip.urlservice.accounts.models.Account;
 import hr.infobip.urlservice.accounts.repositories.AccountRepository;
 
 
