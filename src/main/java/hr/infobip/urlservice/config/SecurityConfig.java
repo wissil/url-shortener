@@ -61,6 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(HttpMethod.POST, "/account").permitAll() // public endpoint
 			.antMatchers(HttpMethod.GET, "/u/**").permitAll() // public endpoint
+			.antMatchers(HttpMethod.GET, "/help").permitAll() // public endpoint
+			.antMatchers(HttpMethod.GET, "/").permitAll() // public endpoint
 			.anyRequest().authenticated() // any other endpoint authenticated
 			.and()
 			.httpBasic();

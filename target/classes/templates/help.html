@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Spring Boot Thymeleaf Hello World Example</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+</head>
+<body>
+
+
+		<div class="starter-template">
+			<h1>Url Shortener help page</h1>
+		</div>
+
+		<div>
+			<h2>API endpoints</h2>
+			<p>
+				<ul>
+					<li><b>/account/</b>: Otvaranje korisnickog racuna putem <i>HTTP POST requesta</i>.</li>
+					<li><b>/register/</b>: Registracija <i>URL-a</i> putem <i>HTTP POST requesta. Potrebna autorizacija korisnika</i>.</li>
+					<li><b>/statistic/{accountId}</b>: Statistika posjeta <i>URL-ova</i> registriranih od korisnika s predanim <i>accountId</i>.</li>
+				</ul>
+			</p>
+
+			<h2>Resources</h2>
+			<p>
+				<ul>
+					<li><b>/u/{urlId}</b>: Redirekt klijenta na <i>URL</i> adresu konfiguriranu zadanim <i>urlId</i>.</li>
+				</ul>
+			</p>
+
+		</div>
+
+</body>
+</html>
