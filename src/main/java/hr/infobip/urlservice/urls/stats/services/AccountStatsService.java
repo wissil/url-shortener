@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -31,14 +33,14 @@ public class AccountStatsService {
 	 * Maps the {@link Url} object to the number of times it got called.
 	 */
 	// urlId --> number of hits
-	private final Map<Url, Integer> urlHits;
+	private final Map<Url, AtomicInteger> urlHits;
 	
 	/**
 	 * Creates a new instance of {@link AccountStatsService}.
 	 */
 	public AccountStatsService() {
 		this.accountStats = new HashMap<>();
-		this.urlHits = new HashMap<>();
+		this.urlHits = new ConcurrentHashMap<>();
 	}
 	
 	/**
@@ -58,7 +60,7 @@ public class AccountStatsService {
 		stats.add(url);
 		
 		accountStats.put(accountId, stats);
-		urlHits.put(url, 0);
+		urlHits.put(url, new AtomicInteger(0));
 	}
 
 	/**
@@ -67,8 +69,9 @@ public class AccountStatsService {
 	 * @param url <b>URL</b> that was hit.
 	 */
 	public void incrementHit(Url url) {
-		int hits = urlHits.get(url);		
-		urlHits.put(url, ++hits);
+		AtomicInteger hits = urlHits.get(url);
+		hits.incrementAndGet();
+		urlHits.put(url, hits);
 	}
 	
 	/**
@@ -83,6 +86,6 @@ public class AccountStatsService {
 				.stream()
 				.collect(Collectors.toMap(
 						u -> u.getUrl(), 
-						u -> urlHits.get(u)));			
+						u -> urlHits.get(u).intValue()));			
 	}
 }
