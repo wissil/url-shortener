@@ -67,11 +67,12 @@ public class AccountStatsService {
 	 * Increment <b>URL</b> hit statistic for the given <code>url</code> by <code>1</code> hit.
 	 * 
 	 * @param url <b>URL</b> that was hit.
+	 * @return Number of times the given <code>url</code> was hit after this increment.
 	 */
-	public void incrementHit(Url url) {
-		AtomicInteger hits = urlHits.get(url);
-		hits.incrementAndGet();
-		urlHits.put(url, hits);
+	public int incrementHit(Url url) {
+		// return not to lose potentially beneficial info in the client code
+		// altho currently not used
+		return urlHits.get(url).incrementAndGet();
 	}
 	
 	/**
